@@ -1,0 +1,37 @@
+﻿version: '3.4'
+
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  apigateway:
+    build: ./ApiGateway
+    ports:
+      - "5000:80"
+    depends_on:
+      - orderservice
+      - paymentservice
+
+  orderservice:
+    build: ./OrderService
+    ports:
+      - "5001:80"
+    depends_on:
+      - rabbitmq
+
+  paymentservice:
+    build: ./PaymentService
+    ports:
+      - "5002:80"
+    depends_on:
+      - rabbitmq
+        
+  inventoryservice:
+    build: ./InventoryService
+    ports:
+      - "5003:80"
+    depends_on:
+      - rabbitmq
